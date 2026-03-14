@@ -91,6 +91,46 @@ public class Main {
 
         System.out.println(mapLayout);
 
+        String[][] board = buildBoard(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), bufferedReader);
+        
+        System.out.println(turnModulo(solver(board, Integer.parseInt(parts[2]), Integer.parseInt(parts[3])))); //ya eu sei q isto tá trágico
+
+        }
 
     }
+    /**
+     * Method used to create the board by receiving the rows and columns 
+     * 
+     */
+    private static String[][] buildBoard(int rows, int columns, BufferedReader br) throws IOException{
+        String[][] board = new String[rows][columns];
+        for(int i = 0; i < rows; i++){
+            String row = br.readLine();
+            String tiles[] = row.split("");
+            for(int j = 0; j < columns; j++){
+                board[i][j] = tiles[j];
+            }
+        }
+
+        return board;
+    }
+    /**
+    // possible movements: R- right; 
+    //                     D - down; 
+    //                     RD - jump right+down; 
+    //                     DD - jump down+down; 
+    //                     LD = jump left+down
+    // Main solving method to return the total number of possible results
+    // TODO:implement DP method
+    */
+        private static long solver( String[][] board, int consJumps, int maxJumps){
+        
+        return 0;
+        }
+
+        //Method to turn the solution calculated with solver into modulo
+        private static String turnModulo(long solution){
+            return "ya";
+        }
+
 }
