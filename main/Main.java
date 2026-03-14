@@ -41,11 +41,46 @@ public class Main {
         // parts[2] - nr of maximum consecutive jumps
         // parts[3] - nr of maximum total jumps
 
+        String[][] board = buildBoard(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), bufferedReader);
+        
+        System.out.println("done");
         // TODO: loop recursividade cena toda marada para construir 
         // o map com parts[0] e parts[1] com buffReader, 
-        // ske tentar fazer double loop primeiro para ver se td funciona e dps fazer bem
+        // ske tentar fazer recursivamente apenas primeiro para ver se funciona
 
         }
 
+    }
+
+    private static String[][] buildBoard(int rows, int columns, BufferedReader br) throws IOException{
+        String[][] board = new String[rows][columns];
+        for(int i = 0; i < rows; i++){
+            String row = br.readLine();
+            String tiles[] = row.split("");
+            for(int j = 0; j < columns; j++){
+                board[i][j] = tiles[j];
+            }
+        }
+
+        return board;
+    }
+    private static long solver(int n, String[][] board, int consJumps, int maxJumps){
+        // agora está implementada a fórmula DP otimizada para fibonnaci
+        // como template ig
+
+        //base case
+        if(n == 0 || n == 1){
+            return n;
+        }
+
+        long penultimate;
+        long last = 0;
+        long current = 1;
+        for(int i = 2; i <=n; i++){
+            penultimate = last;
+            last = penultimate;
+            current = penultimate + last;
+        }
+        return last;
     }
 }
