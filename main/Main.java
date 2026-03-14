@@ -17,6 +17,40 @@ public class Main {
         // "#" means this tile cannot be stepped on (must avoid/not valid path)
 
         /**
+         * After brainstorming on my whiteboard for a whole day, searching the internet for DP examples, watching videos and asking an LLM to think alongside me I managed to squeeze the following concept
+         * We should approach this as a state-based problem represented by a 4-dimensional array with recursion and memoization. It can also be represented by a DAG directed acyclical graph (which is what I used to draw examples and manually compute)
+         * states are represented by paths[r][c][s][k] where R are rows, c are columns, s is the number of maxConsecutiveJumps (a counter) and k is the number of jumps in the current test case (another counter)
+         *
+         * it goes something like
+         *
+         * countPaths(r,c,s,k){
+         *  if (this state is invalid) -> return 0 // need to write verifications for IS this tile out of bounds; is it nullTile #; is k > N; is s > M
+         *
+         *  if (this is the endGoal) -> return 1 // need to write a verification for endGoal (if r == R-1 and c== C-1 means its the end of the grid)
+         *
+         *  if (this countPaths(r,c,s,k) already exists in memory, saved in our structure) -> return it from the structure
+         *
+         *  int paths = 0
+         *
+         *  considering regular moves (no jumps)
+         *  paths += countPaths(r, c+1, s, 0) move right
+         *  paths += countPaths(r+1, c, s, 0) move down
+         *
+         *  considering jumps
+         *  if s < M and k < N:
+         *  paths += countPaths(r+2, c, s+1, k+1) down-down jump
+         *
+         *  if thisTile != J and thisTile != X:
+         *  paths += countPaths(r+1, c+1, s+1, k+1) down right jump
+         *  paths += countPaths(r+1, c-1, s+1, k+1) down left jump
+         *
+         *  store paths in memory structure
+         *  return paths
+         *
+         * }
+         */
+
+        /**
          * Arbitrary Constraints:
          * 1 <= numTestCases <= 20
          * 1 <= rows <= 400
@@ -25,7 +59,7 @@ public class Main {
          * 1 <= maxJumps <= 10
          * ----
          * output numberPaths should be modulo 10^9 + 7 ( mod)
-         * final output answer is an i number of lines printing the ith numberPaths each in respect to the ith test case
+         * final output answer is an i number of lines printing the ith Paths each in respect to the ith test case
          */
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
