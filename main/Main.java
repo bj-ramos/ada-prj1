@@ -32,7 +32,20 @@ public class Main {
 
         int numTestCases = Integer.parseInt(bufferedReader.readLine());
 
+        for(int i=0; i< numTestCases; i++){
+        String parameters = bufferedReader.readLine();
+        String parts[] = parameters.split(" ");
+        
+        // parts[0] - nr of lines
+        // parts[1] - nr of columns
+        // parts[2] - nr of maximum consecutive jumps
+        // parts[3] - nr of maximum total jumps
 
+        // TODO: loop recursividade cena toda marada para construir 
+        // o map com parts[0] e parts[1] com buffReader, 
+        // ske tentar fazer double loop primeiro para ver se td funciona e dps fazer bem
+
+        }
 
     }
 }
