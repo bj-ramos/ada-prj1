@@ -43,15 +43,15 @@ public class Main {
 
         String[][] board = buildBoard(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), bufferedReader);
         
-        System.out.println("done");
-        // TODO: loop recursividade cena toda marada para construir 
-        // o map com parts[0] e parts[1] com buffReader, 
-        // ske tentar fazer recursivamente apenas primeiro para ver se funciona
+        System.out.println(turnModulo(solver(board, Integer.parseInt(parts[2]), Integer.parseInt(parts[3])))); //ya eu sei q isto tá trágico
 
         }
 
     }
-
+    /**
+     * Method used to create the board by receiving the rows and columns 
+     * 
+     */
     private static String[][] buildBoard(int rows, int columns, BufferedReader br) throws IOException{
         String[][] board = new String[rows][columns];
         for(int i = 0; i < rows; i++){
@@ -64,23 +64,23 @@ public class Main {
 
         return board;
     }
-    private static long solver(int n, String[][] board, int consJumps, int maxJumps){
-        // agora está implementada a fórmula DP otimizada para fibonnaci
-        // como template ig
-
-        //base case
-        if(n == 0 || n == 1){
-            return n;
+    /**
+    // possible movements: R- right; 
+    //                     D - down; 
+    //                     RD - jump right+down; 
+    //                     DD - jump down+down; 
+    //                     LD = jump left+down
+    // Main solving method to return the total number of possible results
+    // TODO:implement DP method
+    */
+        private static long solver( String[][] board, int consJumps, int maxJumps){
+        
+        return 0;
         }
 
-        long penultimate;
-        long last = 0;
-        long current = 1;
-        for(int i = 2; i <=n; i++){
-            penultimate = last;
-            last = penultimate;
-            current = penultimate + last;
+        //Method to turn the solution calculated with solver into modulo
+        private static String turnModulo(long solution){
+            return "ya";
         }
-        return last;
-    }
+
 }
