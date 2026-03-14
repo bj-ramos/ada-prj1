@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -64,8 +65,31 @@ public class Main {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-        int numTestCases = Integer.parseInt(bufferedReader.readLine());
 
+        // for now lets assume a SINGULAR test case, then once it works we refactor for multiple test case compatibility (should be straightforward)
+
+
+        // Reads the problem basically
+        String testCaseInfo = bufferedReader.readLine();
+        String[] parts = testCaseInfo.split(" ");
+
+        int r = Integer.parseInt(parts[0]);
+        int c = Integer.parseInt(parts[1]);
+        int m = Integer.parseInt(parts[2]);
+        int n = Integer.parseInt(parts[3]);
+
+
+        HashMap<Integer, Character> mapLayout = new HashMap<>();
+
+        for (int i = 0; i < r; i++) {
+            String line = bufferedReader.readLine();
+            for (int j = 0; j < c; j++) {
+                int key = i * c + j;
+                mapLayout.put(key,line.charAt(j));
+            }
+        }
+
+        System.out.println(mapLayout);
 
 
     }
