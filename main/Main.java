@@ -1,9 +1,21 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Main {
+
+    static int rows ;
+    static int columns;
+    static int maxConsecutiveJumps;
+    static int maxTotalJumps;
+
+    static int[][][][] memoizedPaths;
+    static int[][] gridMapKey;
+
+    static HashMap<Integer, Character> mapLayout = new HashMap<>();
+
     public static void main(String[] args) throws IOException {
 
         // Ava steps one tile at a time, either to the RIGHT or DOWN
@@ -24,10 +36,14 @@ public class Main {
          *
          * it goes something like
          *
+         * pathsRec(R, C , S , K)
+         *
+         *
+         *
          * countPaths(r,c,s,k){
          *  if (this state is invalid) -> return 0 // need to write verifications for IS this tile out of bounds; is it nullTile #; is k > N; is s > M
          *
-         *  if (this is the endGoal) -> return 1 // need to write a verification for endGoal (if r == R-1 and c== C-1 means its the end of the grid)
+         *  if (this is the endGoal) -> return 1 // need to write a verification for endGoal (if r == R-1 and c == C-1 means its the end of the grid)
          *
          *  if (this countPaths(r,c,s,k) already exists in memory, saved in our structure) -> return it from the structure
          *
@@ -65,72 +81,71 @@ public class Main {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-
-        // for now lets assume a SINGULAR test case, then once it works we refactor for multiple test case compatibility (should be straightforward)
-
-
         // Reads the problem basically
         String testCaseInfo = bufferedReader.readLine();
         String[] parts = testCaseInfo.split(" ");
 
-        int r = Integer.parseInt(parts[0]);
-        int c = Integer.parseInt(parts[1]);
-        int m = Integer.parseInt(parts[2]);
-        int n = Integer.parseInt(parts[3]);
+        rows = Integer.parseInt(parts[0]);
+        columns = Integer.parseInt(parts[1]);
 
+        maxConsecutiveJumps = Integer.parseInt(parts[2]);
+        maxTotalJumps = Integer.parseInt(parts[3]);
 
-        HashMap<Integer, Character> mapLayout = new HashMap<>();
+        gridMapKey = new int[rows][columns];
+        memoizedPaths = new int[rows][columns][maxConsecutiveJumps][maxTotalJumps];
 
-        for (int i = 0; i < r; i++) {
+        int keyCounter = -1;
+
+        for (int i = 0; i < rows; i++) {
             String line = bufferedReader.readLine();
-            for (int j = 0; j < c; j++) {
-                int key = i * c + j;
-                mapLayout.put(key,line.charAt(j));
+            for (int j = 0; j < columns; j++) {
+                gridMapKey[i][j] = keyCounter + 1;
+                mapLayout.put(gridMapKey[i][j],line.charAt(j));
+                keyCounter++;
             }
         }
 
-        System.out.println(mapLayout);
+        // need to fill memoized path with -1s
 
-        String[][] board = buildBoard(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), bufferedReader);
-        
-        System.out.println(turnModulo(solver(board, Integer.parseInt(parts[2]), Integer.parseInt(parts[3])))); //ya eu sei q isto tá trágico
+
+        System.out.println("Map -> " + mapLayout);
+
+        int answer = countPaths(0,0,0,0, memoizedPaths);
+        System.out.println("Paths : " + answer);
 
         }
+
+
+    public static int countPaths(int rows, int columns, int consecutiveJumps, int totalJumps, int[][][][] memoizedPaths) {
+
+        // if (r < 0 || r >= R || c < 0 || c >= C) return 0;
+        if ( (rows < 0) || (rows >= Main.rows) || (columns < 0) || (columns >= Main.columns) || (Main.mapLayout.get(gridMapKey[rows][columns]) == '#') || (consecutiveJumps > Main.maxConsecutiveJumps) || (totalJumps > Main.maxTotalJumps)) {
+            return 0;
+        }
+
+        if (Main.rows == rows && Main.columns == columns) {
+            return 1;
+        }
+
+        int result = 0;
+
+        // anda para a direita
+        result += countPaths(rows, columns + 1, 0, totalJumps, memoizedPaths);
+
+        // anda para baixo
+        result += countPaths(rows + 1, columns, 0, totalJumps, memoizedPaths);
+
+        // salta para direita e baixo
+        result += countPaths(rows + 1, columns + 1, consecutiveJumps + 1, totalJumps + 1, memoizedPaths);
+
+        // salta para baixo e baixo
+        result += countPaths(rows + 2, columns, consecutiveJumps + 1, totalJumps + 1, memoizedPaths);
+
+        // salta para esquerda e baixo
+        result += countPaths(rows + 1, columns - 1, consecutiveJumps + 1, totalJumps + 1, memoizedPaths);
+
+
+        return result;
 
     }
-    /**
-     * Method used to create the board by receiving the rows and columns 
-     * 
-     */
-    private static String[][] buildBoard(int rows, int columns, BufferedReader br) throws IOException{
-        String[][] board = new String[rows][columns];
-        for(int i = 0; i < rows; i++){
-            String row = br.readLine();
-            String tiles[] = row.split("");
-            for(int j = 0; j < columns; j++){
-                board[i][j] = tiles[j];
-            }
-        }
-
-        return board;
-    }
-    /**
-    // possible movements: R- right; 
-    //                     D - down; 
-    //                     RD - jump right+down; 
-    //                     DD - jump down+down; 
-    //                     LD = jump left+down
-    // Main solving method to return the total number of possible results
-    // TODO:implement DP method
-    */
-        private static long solver( String[][] board, int consJumps, int maxJumps){
-        
-        return 0;
-        }
-
-        //Method to turn the solution calculated with solver into modulo
-        private static String turnModulo(long solution){
-            return "ya";
-        }
-
 }
