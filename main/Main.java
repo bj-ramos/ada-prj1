@@ -18,8 +18,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-
         // Reads the problem basically
+
+        int numTestCases = Integer.parseInt(bufferedReader.readLine());    
+
+        for(int o = 0; o < numTestCases; o++){
         String testCaseInfo = bufferedReader.readLine();
         String[] parts = testCaseInfo.split(" ");
 
@@ -57,8 +60,8 @@ public class Main {
        // System.out.println("Map -> " + mapLayout);
 
         int answer = countPaths(0,0,0,0);
-        System.out.println("Paths : " + answer);
-
+    System.out.println("Paths : " + answer % (Math.pow(10,9) + 7));
+    }
         }
 
 
@@ -92,16 +95,16 @@ public class Main {
         if(((consecutiveJumps < Main.maxConsecutiveJumps) || (totalJumps < Main.maxTotalJumps)) && (Main.mapLayout.get(gridMapKey[rows][columns]) != 'J')) {
 
         // salta para baixo e baixo
-        downDown += countPaths(rows + 2, columns, consecutiveJumps+1, totalJumps+1);
+        downDown += countPaths(rows + 2, columns, consecutiveJumps + 1, totalJumps + 1);
         
             if((Main.mapLayout.get(gridMapKey[rows][columns]) != 'X')){
 
             // salta para direita e baixo
-            rightDown += countPaths(rows + 1, columns + 1, consecutiveJumps+1, totalJumps+1);
+            rightDown += countPaths(rows + 1, columns + 1, consecutiveJumps + 1, totalJumps + 1);
 
             // salta para esquerda e baixo
-            leftDown += countPaths(rows + 1, columns - 1, consecutiveJumps+1, totalJumps+1);
-            
+            leftDown += countPaths(rows + 1, columns - 1, consecutiveJumps + 1, totalJumps + 1);
+
             }
         }
 
