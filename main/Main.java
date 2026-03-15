@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Main {
@@ -17,6 +16,103 @@ public class Main {
     static HashMap<Integer, Character> mapLayout = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        // Reads the problem basically
+        String testCaseInfo = bufferedReader.readLine();
+        String[] parts = testCaseInfo.split(" ");
+
+        rows = Integer.parseInt(parts[0]);
+        columns = Integer.parseInt(parts[1]);
+
+        maxConsecutiveJumps = Integer.parseInt(parts[2]);
+        maxTotalJumps = Integer.parseInt(parts[3]);
+
+        gridMapKey = new int[rows][columns];
+        memoizedPaths = new int[rows + 1][columns + 1][maxConsecutiveJumps + 1][maxTotalJumps + 1];
+
+        int keyCounter = -1;
+
+        for (int i = 0; i < rows; i++) {
+            String line = bufferedReader.readLine();
+            for (int j = 0; j < columns; j++) {
+                gridMapKey[i][j] = keyCounter + 1;
+                mapLayout.put(gridMapKey[i][j],line.charAt(j));
+                keyCounter++;
+            }
+        }
+
+        // need to fill memoized path with -1s
+        for(int b = 0; b < rows + 1; b++ ){
+            for(int r = 0; r<columns + 1; r++){
+                for(int u = 0; u<maxConsecutiveJumps + 1; u++){
+                    for(int n = 0; n < maxTotalJumps + 1; n++){
+                        memoizedPaths[b][r][u][n] = -1;
+                    }
+                }
+            }
+        }
+
+       // System.out.println("Map -> " + mapLayout);
+
+        int answer = countPaths(0,0,0,0);
+        System.out.println("Paths : " + answer);
+
+        }
+
+
+    public static int countPaths(int rows, int columns, int consecutiveJumps, int totalJumps) {
+
+        if( (rows < 0) || (rows >= Main.rows) || (columns < 0) || (columns >= Main.columns)){
+            return 0;
+        }
+  
+        if ((Main.mapLayout.get(gridMapKey[rows][columns]) == '#') || (consecutiveJumps > Main.maxConsecutiveJumps) || (totalJumps > Main.maxTotalJumps)) {
+          return 0;
+        }
+    
+        if (Main.rows - 1 == rows && Main.columns - 1 == columns) {
+            return 1;
+        }
+
+        if(memoizedPaths[rows][columns][consecutiveJumps][totalJumps] != -1){
+            return memoizedPaths[rows][columns][consecutiveJumps][totalJumps];
+        }
+
+        // anda para a direita
+        int right = countPaths(rows, columns + 1, 0, totalJumps);
+
+        // anda para baixo
+        int down = countPaths(rows + 1, columns, 0, totalJumps);
+        int rightDown = 0;
+        int downDown = 0;
+        int leftDown = 0;
+        
+        if(((consecutiveJumps < Main.maxConsecutiveJumps) || (totalJumps < Main.maxTotalJumps)) && (Main.mapLayout.get(gridMapKey[rows][columns]) != 'J')) {
+
+        // salta para baixo e baixo
+        downDown += countPaths(rows + 2, columns, consecutiveJumps+1, totalJumps+1);
+        
+            if((Main.mapLayout.get(gridMapKey[rows][columns]) != 'X')){
+
+            // salta para direita e baixo
+            rightDown += countPaths(rows + 1, columns + 1, consecutiveJumps+1, totalJumps+1);
+
+            // salta para esquerda e baixo
+            leftDown += countPaths(rows + 1, columns - 1, consecutiveJumps+1, totalJumps+1);
+            
+            }
+        }
+
+        memoizedPaths[rows][columns][consecutiveJumps][totalJumps] = right + down + rightDown + downDown + leftDown;
+        
+
+        return right + down + rightDown + downDown + leftDown;
+
+    }
+}
+
 
         // Ava steps one tile at a time, either to the RIGHT or DOWN
         // Ava can jump a limited number of times diagonally LEFTDOWN, DOWN or RIGHTDOWN
@@ -78,74 +174,3 @@ public class Main {
          * output numberPaths should be modulo 10^9 + 7 ( mod)
          * final output answer is an i number of lines printing the ith Paths each in respect to the ith test case
          */
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-
-        // Reads the problem basically
-        String testCaseInfo = bufferedReader.readLine();
-        String[] parts = testCaseInfo.split(" ");
-
-        rows = Integer.parseInt(parts[0]);
-        columns = Integer.parseInt(parts[1]);
-
-        maxConsecutiveJumps = Integer.parseInt(parts[2]);
-        maxTotalJumps = Integer.parseInt(parts[3]);
-
-        gridMapKey = new int[rows][columns];
-        memoizedPaths = new int[rows][columns][maxConsecutiveJumps][maxTotalJumps];
-
-        int keyCounter = -1;
-
-        for (int i = 0; i < rows; i++) {
-            String line = bufferedReader.readLine();
-            for (int j = 0; j < columns; j++) {
-                gridMapKey[i][j] = keyCounter + 1;
-                mapLayout.put(gridMapKey[i][j],line.charAt(j));
-                keyCounter++;
-            }
-        }
-
-        // need to fill memoized path with -1s
-
-
-        System.out.println("Map -> " + mapLayout);
-
-        int answer = countPaths(0,0,0,0, memoizedPaths);
-        System.out.println("Paths : " + answer);
-
-        }
-
-
-    public static int countPaths(int rows, int columns, int consecutiveJumps, int totalJumps, int[][][][] memoizedPaths) {
-
-        // if (r < 0 || r >= R || c < 0 || c >= C) return 0;
-        if ( (rows < 0) || (rows >= Main.rows) || (columns < 0) || (columns >= Main.columns) || (Main.mapLayout.get(gridMapKey[rows][columns]) == '#') || (consecutiveJumps > Main.maxConsecutiveJumps) || (totalJumps > Main.maxTotalJumps)) {
-            return 0;
-        }
-
-        if (Main.rows == rows && Main.columns == columns) {
-            return 1;
-        }
-
-        int result = 0;
-
-        // anda para a direita
-        result += countPaths(rows, columns + 1, 0, totalJumps, memoizedPaths);
-
-        // anda para baixo
-        result += countPaths(rows + 1, columns, 0, totalJumps, memoizedPaths);
-
-        // salta para direita e baixo
-        result += countPaths(rows + 1, columns + 1, consecutiveJumps + 1, totalJumps + 1, memoizedPaths);
-
-        // salta para baixo e baixo
-        result += countPaths(rows + 2, columns, consecutiveJumps + 1, totalJumps + 1, memoizedPaths);
-
-        // salta para esquerda e baixo
-        result += countPaths(rows + 1, columns - 1, consecutiveJumps + 1, totalJumps + 1, memoizedPaths);
-
-
-        return result;
-
-    }
-}
