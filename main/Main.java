@@ -10,7 +10,7 @@ public class Main {
     static int maxConsecutiveJumps;
     static int maxTotalJumps;
 
-    static int[][][][] memoizedPaths;
+    static long[][][][] memoizedPaths;
     static int[][] gridMapKey;
 
     static HashMap<Integer, Character> mapLayout = new HashMap<>();
@@ -33,7 +33,7 @@ public class Main {
         maxTotalJumps = Integer.parseInt(parts[3]);
 
         gridMapKey = new int[rows][columns];
-        memoizedPaths = new int[rows + 1][columns + 1][maxConsecutiveJumps + 1][maxTotalJumps + 1];
+        memoizedPaths = new long[rows + 1][columns + 1][maxConsecutiveJumps + 1][maxTotalJumps + 1];
 
         int keyCounter = -1;
 
@@ -59,13 +59,12 @@ public class Main {
 
        // System.out.println("Map -> " + mapLayout);
 
-        int answer = countPaths(0,0,0,0);
+        long answer = countPaths(0,0,0,0);
     System.out.println("Paths : " + answer % (Math.pow(10,9) + 7));
     }
         }
 
-
-    public static int countPaths(int rows, int columns, int consecutiveJumps, int totalJumps) {
+    public static long countPaths(int rows, int columns, int consecutiveJumps, int totalJumps) {
 
         if( (rows < 0) || (rows >= Main.rows) || (columns < 0) || (columns >= Main.columns)){
             return 0;
@@ -84,15 +83,16 @@ public class Main {
         }
 
         // anda para a direita
-        int right = countPaths(rows, columns + 1, 0, totalJumps);
+        long right = countPaths(rows, columns + 1, 0, totalJumps);
 
         // anda para baixo
-        int down = countPaths(rows + 1, columns, 0, totalJumps);
-        int rightDown = 0;
-        int downDown = 0;
-        int leftDown = 0;
+        long down = countPaths(rows + 1, columns, 0, totalJumps);
+
+        long rightDown = 0;
+        long downDown = 0;
+        long leftDown = 0;
         
-        if(((consecutiveJumps < Main.maxConsecutiveJumps) || (totalJumps < Main.maxTotalJumps)) && (Main.mapLayout.get(gridMapKey[rows][columns]) != 'J')) {
+        if(((consecutiveJumps < Main.maxConsecutiveJumps) && (totalJumps < Main.maxTotalJumps)) && (Main.mapLayout.get(gridMapKey[rows][columns]) != 'J')) {
 
         // salta para baixo e baixo
         downDown += countPaths(rows + 2, columns, consecutiveJumps + 1, totalJumps + 1);
@@ -115,7 +115,6 @@ public class Main {
 
     }
 }
-
 
         // Ava steps one tile at a time, either to the RIGHT or DOWN
         // Ava can jump a limited number of times diagonally LEFTDOWN, DOWN or RIGHTDOWN
