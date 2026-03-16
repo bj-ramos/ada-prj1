@@ -9,6 +9,7 @@ public class Main {
     static int columns;
     static int maxConsecutiveJumps;
     static int maxTotalJumps;
+    static final long modValue = 1000000007;
 
     static long[][][][] memoizedPaths;
     static int[][] gridMapKey;
@@ -60,7 +61,7 @@ public class Main {
        // System.out.println("Map -> " + mapLayout);
 
         long answer = countPaths(0,0,0,0);
-    System.out.println("Paths : " + answer % (Math.pow(10,9) + 7));
+    System.out.println("Paths : " + answer % modValue);
     }
         }
 
